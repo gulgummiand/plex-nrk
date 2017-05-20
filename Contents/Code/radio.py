@@ -64,7 +64,8 @@ def radio_live_channels(region = 'national'):
         oc.add(
             TrackObject(
                 url = PROGRAMS_ROOT_URL + channel_id,
-                title = channel_name
+                title = channel_name,
+                thumb = R(channel_id + '_logo.png') if region == 'national' else R('p1_logo.png')
             )
         )
     if region != 'district':
