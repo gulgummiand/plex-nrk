@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+
+IMAGE_BASE_URL = 'http://gfx.nrk.no/{}'
+
+TVAPI_HEADERS = {
+    'User-Agent': 'plex.tv',
+    'app-version-android': 999
+}
+
+def MetadataObjectForURL(url):
+
+    media_json = JSON.ObjectFromURL(url, headers = TVAPI_HEADERS)
+    
+    available_timestamp = media_json.get('usageRights', {}).get('availableFrom')
+    available_date = Datetime.FromTimestamp(available_timestamp/1000) if available_timestamp else None
+    meta_object = VideoClipObject(
+        duration = media_json.get('duration'),
+        title = media_json.get('fullTitle') or media_json.get('title'),
+        originally_available_at = available_date,
+        summary = media_json.get('description'),
+        content_rating = media_json.get('legalAge'),
+        thumb = GetImageURL(media_json.get('imageId')),
+        art = GetImageURL(media_json.get('imageId'))
+    )
+    return meta_object
+
+
+def MediaObjectsForURL(url): # FIXME: Some of this makes no sense for radio streams
+    mo = MediaObject(
+#        bitrate = 2406000,
+        audio_channels = 2,
+        video_resolution = 720,
+        optimized_for_streaming = True,
+        parts = [
+            PartObject(
+                key = HTTPLiveStreamURL(Callback(PlayVideo, url = url))
+            )
+        ]
+    )
+    return [mo]
+
+
+def PlayVideo(url):
+    program = JSON.ObjectFromURL(url, headers = TVAPI_HEADERS)
+    m3u8_url = program['mediaUrl']
+    return Redirect(HTTPLiveStreamURL(m3u8_url))
+        
+    
+
+def GetImageURL(image_id):
+    return IMAGE_BASE_URL.format(image_id) if image_id else None
