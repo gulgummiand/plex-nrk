@@ -8,20 +8,25 @@ TVAPI_HEADERS = {
 }
 
 def MetadataObjectForURL(url):
-
     media_json = JSON.ObjectFromURL(url, headers = TVAPI_HEADERS)
-    
-    available_timestamp = media_json.get('usageRights', {}).get('availableFrom')
-    available_date = Datetime.FromTimestamp(available_timestamp/1000) if available_timestamp else None
-    meta_object = VideoClipObject(
-        duration = media_json.get('duration'),
-        title = media_json.get('fullTitle') or media_json.get('title'),
-        originally_available_at = available_date,
-        summary = media_json.get('description'),
-        content_rating = media_json.get('legalAge'),
-        thumb = GetImageURL(media_json.get('imageId')),
-        art = GetImageURL(media_json.get('imageId'))
-    )
+
+    # TODO: Temporary check. More robust to see if manifest contains video stream.
+    if 'nrk-radio-live' in media_json['mediaUrl']:
+        meta_object = TrackObject()
+    else:
+        available_timestamp = media_json.get('usageRights', {}).get('availableFrom')
+        available_date = Datetime.FromTimestamp(available_timestamp/1000) if available_timestamp else None
+        meta_object = VideoClipObject(
+            originally_available_at = available_date,
+            summary = media_json.get('description'),
+            content_rating = media_json.get('legalAge')
+        )
+
+    meta_object.duration = media_json.get('duration')
+    meta_object.title = media_json.get('fullTitle') or media_json.get('title')
+    meta_object.thumb = GetImageURL(media_json.get('imageId'))
+    meta_object.art = GetImageURL(media_json.get('imageId'))
+
     return meta_object
 
 
