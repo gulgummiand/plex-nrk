@@ -25,11 +25,9 @@ def MetadataObjectForURL(url):
     return meta_object
 
 
-def MediaObjectsForURL(url): # FIXME: Some of this makes no sense for radio streams
+def MediaObjectsForURL(url):
     mo = MediaObject(
-#        bitrate = 2406000,
         audio_channels = 2,
-        video_resolution = 720,
         optimized_for_streaming = True,
         parts = [
             PartObject(
