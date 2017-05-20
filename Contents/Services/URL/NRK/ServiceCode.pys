@@ -25,7 +25,7 @@ def MetadataObjectForURL(url):
     return meta_object
 
 
-def MediaObjectsForURL(url):
+def MediaObjectsForURL(url):    
     mo = MediaObject(
         audio_channels = 2,
         optimized_for_streaming = True,
@@ -41,7 +41,7 @@ def MediaObjectsForURL(url):
 def PlayVideo(url):
     program = JSON.ObjectFromURL(url, headers = TVAPI_HEADERS)
     m3u8_url = program['mediaUrl']
-    return Redirect(HTTPLiveStreamURL(m3u8_url))
+    return Redirect(m3u8_url)
         
     
 
