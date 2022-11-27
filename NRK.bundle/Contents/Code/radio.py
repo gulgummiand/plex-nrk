@@ -43,39 +43,39 @@ RADIO_CHANNELS_DISTRICT = [
 
 
 
-@route(ROUTE_PREFIX + '/radio')
-def radio_menu():
-    oc = ObjectContainer()
+# @route(ROUTE_PREFIX + '/radio')
+# def radio_menu():
+#     oc = ObjectContainer()
 
-    oc.add(
-        DirectoryObject(
-            key = Callback(radio_live_channels),
-            title = u'Direkte Radio'
-        )
-    )
-    return oc
+#     oc.add(
+#         DirectoryObject(
+#             key = Callback(radio_live_channels),
+#             title = u'Direkte Radio'
+#         )
+#     )
+#     return oc
 
 
-@route(ROUTE_PREFIX + '/radio/live')
-def radio_live_channels(region = 'national'):
-    oc = ObjectContainer()
-    channels = RADIO_CHANNELS_NATIONAL if region == 'national' else RADIO_CHANNELS_DISTRICT
-    for channel_id, channel_name in channels:
-        oc.add(
-            TrackObject(
-                url = PROGRAMS_ROOT_URL + channel_id,
-                title = channel_name,
-                thumb = R(channel_id + '_logo.png') if region == 'national' else R('p1_logo.png')
-            )
-        )
-    if region != 'district':
-        oc.add(
-            DirectoryObject(
-                key = Callback(radio_live_channels, region = 'district'),
-                title = u'Distriktskanaler'
-            )
-        )
-    return oc
+# @route(ROUTE_PREFIX + '/radio/live')
+# def radio_live_channels(region = 'national'):
+#     oc = ObjectContainer()
+#     channels = RADIO_CHANNELS_NATIONAL if region == 'national' else RADIO_CHANNELS_DISTRICT
+#     for channel_id, channel_name in channels:
+#         oc.add(
+#             TrackObject(
+#                 url = PROGRAMS_ROOT_URL + channel_id,
+#                 title = channel_name,
+#                 thumb = R(channel_id + '_logo.png') if region == 'national' else R('p1_logo.png')
+#             )
+#         )
+#     if region != 'district':
+#         oc.add(
+#             DirectoryObject(
+#                 key = Callback(radio_live_channels, region = 'district'),
+#                 title = u'Distriktskanaler'
+#             )
+#         )
+#     return oc
 
 
 

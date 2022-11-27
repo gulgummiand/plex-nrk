@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from PMS import *
+
+from common import ROUTE_PREFIX
 import tv
 import radio
-from common import ROUTE_PREFIX
 
 NAME = 'NRK'
 ART = 'art-default.png'
@@ -11,14 +13,16 @@ ICON = 'icon-default.png'
 
 def Start():
     ObjectContainer.title1 = NAME
-    #HTTP.CacheTime = CACHE_1HOUR
+    #HTTP.CacheTime = CACHE_1HOUR # in sec: CACHE_1MINUTE, CACHE_1HOUR, CACHE_1DAY, CACHE_1WEEK, CACHE_1MONTH
     HTTP.ClearCache()
 
 
-@handler(ROUTE_PREFIX, NAME, art=ART, thumb=ICON)
-def main_menu():
+#@handler(ROUTE_PREFIX, NAME, art=ART, thumb=ICON)
+@handler(ROUTE_PREFIX, NAME, ICON)
+@route(ROUTE_PREFIX + '/MainMenu')
+def Main_Menu():
+    Log.Debug("Staring MainMenu")
     oc = ObjectContainer()
-
     oc.add(
         DirectoryObject(
             key = Callback(tv.tv_menu),
@@ -33,6 +37,5 @@ def main_menu():
             thumb = R('radio-icon.png')
         )
     )
-
     return oc
 
